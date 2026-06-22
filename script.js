@@ -22,13 +22,21 @@ function updateBook() {
     }
   });
 
-  prevBtn.disabled = currentPage === 0;
-  nextBtn.disabled = currentPage === pages.length - 1;
+  if (prevBtn) prevBtn.disabled = currentPage === 0;
+  if (nextBtn) nextBtn.disabled = currentPage === pages.length - 1;
 
-  prevBtnMobile.disabled = currentPage === 0;
-  nextBtnMobile.disabled = currentPage === pages.length - 1;
+  if (prevBtnMobile) prevBtnMobile.disabled = currentPage === 0;
+  if (nextBtnMobile) nextBtnMobile.disabled = currentPage === pages.length - 1;
 
-  pageIndicator.textContent = `Page ${currentPage + 1} / ${pages.length}`;
+  if (pageIndicator) {
+    pageIndicator.textContent = `Page ${currentPage + 1} / ${pages.length}`;
+  }
+
+  // Reset the scroll position of the text box on each page change.
+  const activeMessageBox = pages[currentPage].querySelector(".message-box");
+  if (activeMessageBox) {
+    activeMessageBox.scrollTop = 0;
+  }
 }
 
 function nextPage() {
@@ -45,11 +53,11 @@ function prevPage() {
   }
 }
 
-nextBtn.addEventListener("click", nextPage);
-prevBtn.addEventListener("click", prevPage);
+if (nextBtn) nextBtn.addEventListener("click", nextPage);
+if (prevBtn) prevBtn.addEventListener("click", prevPage);
 
-nextBtnMobile.addEventListener("click", nextPage);
-prevBtnMobile.addEventListener("click", prevPage);
+if (nextBtnMobile) nextBtnMobile.addEventListener("click", nextPage);
+if (prevBtnMobile) prevBtnMobile.addEventListener("click", prevPage);
 
 // Keyboard support
 document.addEventListener("keydown", (event) => {
@@ -66,14 +74,16 @@ document.addEventListener("keydown", (event) => {
 let touchStartX = 0;
 let touchEndX = 0;
 
-book.addEventListener("touchstart", (event) => {
-  touchStartX = event.changedTouches[0].screenX;
-});
+if (book) {
+  book.addEventListener("touchstart", (event) => {
+    touchStartX = event.changedTouches[0].screenX;
+  }, { passive: true });
 
-book.addEventListener("touchend", (event) => {
-  touchEndX = event.changedTouches[0].screenX;
-  handleSwipe();
-});
+  book.addEventListener("touchend", (event) => {
+    touchEndX = event.changedTouches[0].screenX;
+    handleSwipe();
+  }, { passive: true });
+}
 
 function handleSwipe() {
   const swipeDistance = touchEndX - touchStartX;
